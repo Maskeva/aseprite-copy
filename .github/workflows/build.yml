@@ -67,50 +67,59 @@ jobs:
             libx11-dev libxcursor-dev libxi-dev
 
         fi
+    - name: movefile
 
-    - name: Generating Makefiles
+      shell: cmd
 
-      shell: bash
+      run: move D:\a\aseprite-copy\aseprite-copy c:\aseprite 
+      run: c: && cd c:\aseprite
 
-      run: |
 
-        if [[ "${{ runner.os }}" == "Windows" ]] ; then
 
-          export enable_ccache=off
 
-        else
+    # - name: Generating Makefiles
 
-          export enable_ccache=on
+    #   shell: bash
 
-        fi
+    #   run: |
 
-        curl -L https://raw.githubusercontent.com/Maskeva/aseprite-copy/main/skia/skia.zip --output skia.zip
+    #     if [[ "${{ runner.os }}" == "Windows" ]] ; then
 
-        7z x skia.zip
+    #       export enable_ccache=off
 
-        cmake -S . -B build -G Ninja \
+    #     else
 
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+    #       export enable_ccache=on
 
-          -DENABLE_UI=${{ matrix.enable_ui }} \
+    #     fi
 
-          -DENABLE_CCACHE=$enable_ccache \
+    #     curl -L https://raw.githubusercontent.com/Maskeva/aseprite-copy/main/skia/skia.zip --output skia.zip
 
-          -DLAF_BACKEND=skia \
+    #     7z x skia.zip
 
-          -DSKIA_DIR=./skia \
+    #     cmake -S . -B build -G Ninja \
 
-          -DSKIA_LIBRARY_DIR=./skia/out/Release-x64 \
+    #       -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
 
-          -DSKIA_LIBRARY=./skia/out/Release-x64/skia.lib
+    #       -DENABLE_UI=${{ matrix.enable_ui }} \
 
-    - name: Compiling
+    #       -DENABLE_CCACHE=$enable_ccache \
 
-      shell: bash
+    #       -DLAF_BACKEND=skia \
 
-      run: |
+    #       -DSKIA_DIR=./skia \
 
-        cd build && ninja
+    #       -DSKIA_LIBRARY_DIR=./skia/out/Release-x64 \
+
+    #       -DSKIA_LIBRARY=./skia/out/Release-x64/skia.lib
+
+    # - name: Compiling
+
+    #   shell: bash
+
+    #   run: |
+
+    #     cd build && ninja
 
     - uses: actions/upload-artifact@v3
 
@@ -120,6 +129,6 @@ jobs:
 
         path: |
 
-          D:/a/aseprite/aseprite/build/bin/data
+          c:\aseprite
 
-          D:/a/aseprite/aseprite/build/bin/aseprite.exe
+          # D:/a/aseprite/aseprite/build/bin/aseprite.exe
