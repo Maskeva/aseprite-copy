@@ -36,16 +36,6 @@ jobs:
 
         submodules: 'recursive'
 
-    - name: ccache
-
-      uses: hendrikmuhs/ccache-action@v1.2
-
-      if: runner.os == 'Linux'
-
-      with:
-
-        key: ${{ matrix.os }}-${{ matrix.enable_ui }}
-
     - uses: seanmiddleditch/gha-setup-ninja@master
 
     - uses: ilammy/msvc-dev-cmd@v1
@@ -96,11 +86,7 @@ jobs:
 
         cmake -S . -B build -G Ninja \
 
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-
-          -DENABLE_UI=${{ matrix.enable_ui }} \
-
-          -DENABLE_CCACHE=$enable_ccache \
+          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
 
           -DLAF_BACKEND=skia \
 
