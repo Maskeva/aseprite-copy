@@ -68,11 +68,11 @@ jobs:
 
         fi
 
-    - name: call
+    # - name: call
 
-      shell: cmd
+    #   shell: cmd
 
-      run: call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat" -arch=x64
+    #   run: call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat" -arch=x64
 
     - name: Generating Makefiles
 
