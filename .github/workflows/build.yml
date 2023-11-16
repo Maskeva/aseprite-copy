@@ -72,7 +72,6 @@ jobs:
       shell: cmd
 
       run: move D:\a\aseprite-copy\aseprite-copy c:\aseprite 
-      run: c: && cd c:\aseprite
 
 
 
