@@ -32,93 +32,91 @@ jobs:
 
     - uses: actions/checkout@v4
 
-      # with:
+      with:
 
-    #     submodules: 'recursive'
+        submodules: 'recursive'
 
-    # - name: ccache
+    - name: ccache
 
-    #   uses: hendrikmuhs/ccache-action@v1.2
+      uses: hendrikmuhs/ccache-action@v1.2
 
-    #   if: runner.os == 'Linux'
+      if: runner.os == 'Linux'
 
-    #   with:
+      with:
 
-    #     key: ${{ matrix.os }}-${{ matrix.enable_ui }}
+        key: ${{ matrix.os }}-${{ matrix.enable_ui }}
 
-    # - uses: seanmiddleditch/gha-setup-ninja@master
+    - uses: seanmiddleditch/gha-setup-ninja@master
 
-    # - uses: ilammy/msvc-dev-cmd@v1
+    - uses: ilammy/msvc-dev-cmd@v1
 
-    #   if: runner.os == 'Windows'
+      if: runner.os == 'Windows'
 
-    # - name: Install Dependencies
+    - name: Install Dependencies
 
-    #   shell: bash
+      shell: bash
 
-    #   run: |
+      run: |
 
-    #     if [[ "${{ runner.os }}" == "Linux" ]] ; then
+        if [[ "${{ runner.os }}" == "Linux" ]] ; then
 
-    #       sudo apt-get update -qq
+          sudo apt-get update -qq
 
-    #       sudo apt-get install -y \
+          sudo apt-get install -y \
 
-    #         libx11-dev libxcursor-dev libxi-dev
+            libx11-dev libxcursor-dev libxi-dev
 
-    #     fi
-    - name: movefile
+        fi
+
+    - name: call
 
       shell: cmd
 
-      run: move D:\a\aseprite-copy\aseprite-copy c:\aseprite 
+      run: call "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat" -arch=x64
 
+    - name: Generating Makefiles
 
+      shell: bash
 
+      run: |
 
-    # - name: Generating Makefiles
+        if [[ "${{ runner.os }}" == "Windows" ]] ; then
 
-    #   shell: bash
+          export enable_ccache=off
 
-    #   run: |
+        else
 
-    #     if [[ "${{ runner.os }}" == "Windows" ]] ; then
+          export enable_ccache=on
 
-    #       export enable_ccache=off
+        fi
 
-    #     else
+        curl -L https://raw.githubusercontent.com/Maskeva/aseprite-copy/main/skia/skia.zip --output skia.zip
 
-    #       export enable_ccache=on
+        7z x skia.zip
 
-    #     fi
+        cmake -S . -B build -G Ninja \
 
-    #     curl -L https://raw.githubusercontent.com/Maskeva/aseprite-copy/main/skia/skia.zip --output skia.zip
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
 
-    #     7z x skia.zip
+          -DENABLE_UI=${{ matrix.enable_ui }} \
 
-    #     cmake -S . -B build -G Ninja \
+          -DENABLE_CCACHE=$enable_ccache \
 
-    #       -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+          -DLAF_BACKEND=skia \
 
-    #       -DENABLE_UI=${{ matrix.enable_ui }} \
+          -DSKIA_DIR=./skia \
 
-    #       -DENABLE_CCACHE=$enable_ccache \
+          -DSKIA_LIBRARY_DIR=./skia/out/Release-x64 \
 
-    #       -DLAF_BACKEND=skia \
+          -DSKIA_LIBRARY=./skia/out/Release-x64/skia.lib
+    
+    - name: Compiling
 
-    #       -DSKIA_DIR=./skia \
+      shell: bash
 
-    #       -DSKIA_LIBRARY_DIR=./skia/out/Release-x64 \
+      run: |
 
-    #       -DSKIA_LIBRARY=./skia/out/Release-x64/skia.lib
-
-    # - name: Compiling
-
-    #   shell: bash
-
-    #   run: |
-
-    #     cd build && ninja
+        cd build && ninja
 
     - uses: actions/upload-artifact@v3
 
@@ -128,6 +126,6 @@ jobs:
 
         path: |
 
-          c:\aseprite
+         D:/a/aseprite/aseprite/build/bin/data
 
-          # D:/a/aseprite/aseprite/build/bin/aseprite.exe
+         D:/a/aseprite/aseprite/build/bin/aseprite.exe
